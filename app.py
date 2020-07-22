@@ -10,6 +10,15 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 boggle_game = Boggle()
 
-@app.route('/')
-def home():
-    return '<h1>Boggle Time</h1>'
+@app.route('/', methods=['GET', 'POST'])
+def home_route():
+    if request.method == 'POST': 
+        session['board'] = boggle_game.make_board()
+        return redirect('/boggle')
+
+    else:
+        return render_template('index.html')
+
+@app.route('/boggle')
+def boggle_route():
+    return '<p>Let\'s Play!</p>'
