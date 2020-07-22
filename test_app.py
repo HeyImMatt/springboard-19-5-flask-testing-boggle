@@ -31,3 +31,16 @@ class BoggleViewsTests(TestCase):
             client.post("/")
 
             self.assertTrue(session['board'])
+
+    def test_boggle_get_route(self):
+        with app.test_client() as client:
+            with client.session_transaction() as session:
+                boggle_game = Boggle()
+                session['board'] = boggle_game.make_board()
+            
+            resp = client.get('/boggle')
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('<td>', html)
+            self.assertIn('<form action="/boggle" method="POST">', html)
