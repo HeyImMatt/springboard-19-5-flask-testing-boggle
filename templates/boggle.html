@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table>
+  <tbody>
+    {% for row in session['board'] %}
+      <tr>
+        {% for letter in row %}
+          <td>{{ letter }}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

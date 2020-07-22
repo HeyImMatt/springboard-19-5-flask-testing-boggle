@@ -21,4 +21,4 @@ def home_route():
 
 @app.route('/boggle')
 def boggle_route():
-    return '<p>Let\'s Play!</p>'
+    return render_template('boggle.html')
