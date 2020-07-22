@@ -1,15 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<table class="table table-bordered col-6">
-  <tbody>
-    {% for row in session['board'] %}
-      <tr>
-        {% for letter in row %}
-          <td>{{ letter }}</td>
+<div class="row">
+  <div class="col-8">
+    <table class="table table-bordered">
+      <tbody>
+        {% for row in session['board'] %}
+          <tr>
+            {% for letter in row %}
+              <td>{{ letter }}</td>
+            {% endfor %}
+          </tr>
         {% endfor %}
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-4 my-auto">
+    <form action="/boggle" method="POST">
+      <div class="form-group">
+        <label for="user-guess">Guess Word:</label>
+        <input type="text" class="form-control" name="guess" id="user-guess">
+      </div>
+      <button type="submit" class="btn btn-info">Submit Guess</button>
+    </form>
+  </div>
+</div>
 {% endblock %}
