@@ -1,14 +1,11 @@
-const newGameBtn = document.querySelector('#start-game-btn');
+const newGameBtn = document.querySelector('#new-game-btn');
 const guessBtn = document.querySelector('#guess-btn');
-
-// if (newGameBtn) {
-//   newGameBtn.addEventListener('click', () => {
-//     currentGame = new Game;
-//   });
-// }
+const guessForm = document.querySelector('#guess-form');
+const wordsList = document.querySelector('#words-played-div > ul');
+let currentGame;
 
 if (guessBtn) {
-  guessBtn.addEventListener('click', checkGuess)
+  guessBtn.addEventListener('click', checkGuess);
 }
 
 class Game {
@@ -33,9 +30,18 @@ class Game {
     }, 1000);
   }
 
+  static gameStartHandler() {
+    currentGame = new Game();
+    currentGame.gameTimerHandler();
+    guessForm.classList.remove('d-none');
+    newGameBtn.classList.add('d-none');
+    currentGame.updateScore(0);
+    wordsList.innerHTML = '';
+  }
+
   gameOverHandler() {
-    const guessForm = document.querySelector('#guess-form');
-    guessForm.remove();
+    guessForm.classList.add('d-none');
+    newGameBtn.classList.remove('d-none');
     this.gameOver = true;
   }
 
@@ -46,11 +52,10 @@ class Game {
   }
 
   updatePlayedWords(word) {
-    const wordsList = document.querySelector('#words-played-div > ul');
     let wordLi = document.createElement('li');
     wordLi.textContent = word;
     currentGame.playedWords.push(word);
-    wordsList.append(wordLi)
+    wordsList.append(wordLi);
   }
 }
 
@@ -72,7 +77,7 @@ async function checkGuess() {
       notifyUser('error');
       throw new Error(err);
     }
-  } else notifyUser('word-played')
+  } else notifyUser('word-played');
 
   userGuessInput.value = '';
 }
@@ -97,7 +102,7 @@ function notifyUser(result) {
       message = "That's not even a word! 😖";
       alertStyle = 'alert-warning';
       break;
-    
+
     case 'word-played':
       message = "You've already played that word! 😮";
       alertStyle = 'alert-warning';
@@ -118,5 +123,8 @@ function notifyUser(result) {
   }, 1000);
 }
 
-let currentGame = new Game();
-currentGame.gameTimerHandler();
+Game.gameStartHandler();
+
+if (newGameBtn) {
+  newGameBtn.addEventListener('click', Game.gameStartHandler);
+}

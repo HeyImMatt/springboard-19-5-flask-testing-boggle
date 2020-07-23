@@ -17,7 +17,7 @@ class BoggleViewsTests(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn('<button id="start-game" type="submit" class="btn btn-info">Start New Game</button>', html)
+            self.assertIn('<button id="start-game-btn" type="submit" class="btn btn-info">Start New Game</button>', html)
     
     def test_index_post_route_redirect(self):
         with app.test_client() as client:
@@ -43,4 +43,4 @@ class BoggleViewsTests(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn('<td>', html)
-            self.assertIn('<form action="/boggle" method="POST">', html)
+            self.assertIn('<form id="guess-form" action="/boggle" method="POST">', html)
