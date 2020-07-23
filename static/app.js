@@ -27,7 +27,7 @@ class Game {
 
       if (gameTime === 0) {
         clearInterval(counter);
-        timer.textContent = 'Game Over!';
+        timer.textContent = 'Expired!';
         this.gameOverHandler();
       }
     }, 1000);
@@ -93,13 +93,12 @@ function notifyUser(result) {
       alertStyle = 'alert-danger';
       break;
   }
-  gameAlert.classList.remove('d-none');
   gameAlert.classList.add(alertStyle);
   gameAlert.textContent = message;
 
   setTimeout(() => {
-    gameAlert.classList.add('d-none');
     gameAlert.classList.remove(alertStyle);
+    gameAlert.textContent = '';
   }, 1000);
 }
 
