@@ -8,11 +8,7 @@ const guessBtn = document.querySelector('#guess-btn');
 // }
 
 if (guessBtn) {
-  guessBtn.addEventListener('click', () => {
-    if (currentGame.gameOver === false) {
-      checkGuess();
-    }
-  });
+  guessBtn.addEventListener('click', checkGuess)
 }
 
 class Game {
@@ -26,15 +22,21 @@ class Game {
     const timer = document.querySelector('#timer');
     let gameTime = 60;
     let counter = setInterval(() => {
-      timer.textContent = gameTime;
       gameTime -= 1;
+      timer.textContent = gameTime;
 
       if (gameTime === 0) {
         clearInterval(counter);
         timer.textContent = 'Game Over!';
-        this.gameOver = true;
+        this.gameOverHandler();
       }
     }, 1000);
+  }
+
+  gameOverHandler() {
+    const guessForm = document.querySelector('#guess-form');
+    guessForm.remove();
+    this.gameOver = true;
   }
 
   updateScore(wordScore) {
