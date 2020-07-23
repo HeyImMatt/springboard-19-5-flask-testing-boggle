@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, render_template, flash, session, jsonify
+from flask import Flask, redirect, request, render_template, flash, session, jsonify, Response
 from flask_debugtoolbar import DebugToolbarExtension
 from boggle import Boggle
 
@@ -14,6 +14,7 @@ boggle_game = Boggle()
 def home_route():
     if request.method == 'POST': 
         session['board'] = boggle_game.make_board()
+        session['high_score'] = 0
         return redirect('/boggle')
 
     else:
@@ -24,8 +25,16 @@ def boggle_route():
     board = session.get('board')
     if request.method == 'POST':
         data = request.get_json()
-        word = data['guess']
-        guess_result = boggle_game.check_valid_word(board, word)
-        return jsonify(result=guess_result)
+        print(data)
+        if 'guess' in data:
+            word = data['guess']
+            guess_result = boggle_game.check_valid_word(board, word)
+            return jsonify(result=guess_result)
+        if 'score' in data:
+            score = int(data['score'])
+            high_score = int(session.get('high_score'))
+            if score > high_score:
+                  session['high_score'] = score
+            return Response(status=200)
     else:
         return render_template('boggle.html')

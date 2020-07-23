@@ -39,10 +39,11 @@ class Game {
     wordsList.innerHTML = '';
   }
 
-  gameOverHandler() {
+  async gameOverHandler() {
     guessForm.classList.add('d-none');
     newGameBtn.classList.remove('d-none');
     this.gameOver = true;
+    await axios.post('/boggle', { score: this.gameScore });
   }
 
   updateScore(wordScore) {
@@ -123,8 +124,8 @@ function notifyUser(result) {
   }, 1000);
 }
 
-Game.gameStartHandler();
-
 if (newGameBtn) {
   newGameBtn.addEventListener('click', Game.gameStartHandler);
 }
+
+Game.gameStartHandler();
