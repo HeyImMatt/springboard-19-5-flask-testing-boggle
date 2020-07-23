@@ -8,17 +8,37 @@ const guessBtn = document.querySelector('#guess-btn');
 // }
 
 if (guessBtn) {
-  guessBtn.addEventListener('click', checkGuess);
+  guessBtn.addEventListener('click', () => {
+    if (currentGame.gameOver === false) {
+      checkGuess();
+    }
+  });
 }
 
 class Game {
   constructor() {
     this.playedWords = [];
     this.gameScore = 0;
+    this.gameOver = false;
+  }
+
+  gameTimerHandler() {
+    const timer = document.querySelector('#timer');
+    let gameTime = 60;
+    let counter = setInterval(() => {
+      timer.textContent = gameTime;
+      gameTime -= 1;
+
+      if (gameTime === 0) {
+        clearInterval(counter);
+        timer.textContent = 'Game Over!';
+        this.gameOver = true;
+      }
+    }, 1000);
   }
 
   updateScore(wordScore) {
-    const scoreDiv = document.querySelector('#score-div')
+    const scoreDiv = document.querySelector('#score-div');
     currentGame.gameScore += wordScore;
     scoreDiv.textContent = currentGame.gameScore;
   }
@@ -34,12 +54,14 @@ async function checkGuess() {
     let res = await axios.post('/boggle', { guess: userGuess });
     notifyUser(res.data.result);
     if (res.data.result === 'ok') {
-      currentGame.updateScore(wordScore)
+      currentGame.updateScore(wordScore);
     }
   } catch (err) {
     notifyUser('error');
     throw new Error(err);
   }
+
+  userGuessInput.value = '';
 }
 
 function notifyUser(result) {
@@ -57,14 +79,15 @@ function notifyUser(result) {
       message = 'Sorry, that word is not on the board 😕';
       alertStyle = 'alert-warning';
       break;
-    
+
     case 'not-word':
-      message = 'That\'s not even a word! 😖';
+      message = "That's not even a word! 😖";
       alertStyle = 'alert-warning';
       break;
 
     case 'error':
-      message = 'Oops! Something went wrong on our end 😬 Please try your guess again.';
+      message =
+        'Oops! Something went wrong on our end 😬 Please try your guess again.';
       alertStyle = 'alert-danger';
       break;
   }
@@ -75,8 +98,8 @@ function notifyUser(result) {
   setTimeout(() => {
     gameAlert.classList.add('d-none');
     gameAlert.classList.remove(alertStyle);
-  }, 1000)
-
+  }, 1000);
 }
 
-let currentGame = new Game;
+let currentGame = new Game();
+currentGame.gameTimerHandler();
