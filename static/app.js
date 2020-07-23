@@ -1,17 +1,41 @@
+const newGameBtn = document.querySelector('#start-game-btn');
 const guessBtn = document.querySelector('#guess-btn');
+
+// if (newGameBtn) {
+//   newGameBtn.addEventListener('click', () => {
+//     currentGame = new Game;
+//   });
+// }
 
 if (guessBtn) {
   guessBtn.addEventListener('click', checkGuess);
 }
 
+class Game {
+  constructor() {
+    this.playedWords = [];
+    this.gameScore = 0;
+  }
+
+  updateScore(wordScore) {
+    const scoreDiv = document.querySelector('#score-div')
+    currentGame.gameScore += wordScore;
+    scoreDiv.textContent = currentGame.gameScore;
+  }
+}
+
 async function checkGuess() {
   event.preventDefault();
   const userGuessInput = document.querySelector('#user-guess');
-  let userGuess = userGuessInput.value;
+  let userGuess = userGuessInput.value.trim().toLowerCase();
+  let wordScore = userGuess.length;
 
   try {
     let res = await axios.post('/boggle', { guess: userGuess });
     notifyUser(res.data.result);
+    if (res.data.result === 'ok') {
+      currentGame.updateScore(wordScore)
+    }
   } catch (err) {
     notifyUser('error');
     throw new Error(err);
@@ -54,3 +78,5 @@ function notifyUser(result) {
   }, 1000)
 
 }
+
+let currentGame = new Game;

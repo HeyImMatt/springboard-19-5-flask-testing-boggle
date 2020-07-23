@@ -24,7 +24,7 @@ def boggle_route():
     board = session.get('board')
     if request.method == 'POST':
         data = request.get_json()
-        word = data['guess'].lower()
+        word = data['guess']
         guess_result = boggle_game.check_valid_word(board, word)
         return jsonify(result=guess_result)
     else:

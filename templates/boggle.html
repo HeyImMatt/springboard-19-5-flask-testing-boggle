@@ -3,7 +3,13 @@
 {% block content %}
 <div id="game-alert" class="alert d-none" role="alert"></div>
 <div class="row">
-  <div class="col-8">
+  <div class="col-2">
+    <h5><u>Score</u></h5>
+    <div id="score-div" class="mb-5"></div>
+    <h5><u>Words Played</u></h5>
+    <div id="words-played-div"></div>
+  </div>
+  <div class="col-7">
     <table class="table table-bordered">
       <tbody>
         {% for row in session['board'] %}
@@ -16,7 +22,7 @@
       </tbody>
     </table>
   </div>
-  <div class="col-4 my-auto">
+  <div class="col-3 my-auto">
     <form action="/boggle" method="POST">
       <div class="form-group">
         <label for="user-guess">Guess Word:</label>
