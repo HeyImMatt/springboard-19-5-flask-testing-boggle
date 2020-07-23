@@ -44,6 +44,14 @@ class Game {
     currentGame.gameScore += wordScore;
     scoreDiv.textContent = currentGame.gameScore;
   }
+
+  updatePlayedWords(word) {
+    const wordsList = document.querySelector('#words-played-div > ul');
+    let wordLi = document.createElement('li');
+    wordLi.textContent = word;
+    currentGame.playedWords.push(word);
+    wordsList.append(wordLi)
+  }
 }
 
 async function checkGuess() {
@@ -52,16 +60,19 @@ async function checkGuess() {
   let userGuess = userGuessInput.value.trim().toLowerCase();
   let wordScore = userGuess.length;
 
-  try {
-    let res = await axios.post('/boggle', { guess: userGuess });
-    notifyUser(res.data.result);
-    if (res.data.result === 'ok') {
-      currentGame.updateScore(wordScore);
+  if (!currentGame.playedWords.includes(userGuess)) {
+    try {
+      let res = await axios.post('/boggle', { guess: userGuess });
+      notifyUser(res.data.result);
+      if (res.data.result === 'ok') {
+        currentGame.updateScore(wordScore);
+        currentGame.updatePlayedWords(userGuess);
+      }
+    } catch (err) {
+      notifyUser('error');
+      throw new Error(err);
     }
-  } catch (err) {
-    notifyUser('error');
-    throw new Error(err);
-  }
+  } else notifyUser('word-played')
 
   userGuessInput.value = '';
 }
@@ -84,6 +95,11 @@ function notifyUser(result) {
 
     case 'not-word':
       message = "That's not even a word! 😖";
+      alertStyle = 'alert-warning';
+      break;
+    
+    case 'word-played':
+      message = "You've already played that word! 😮";
       alertStyle = 'alert-warning';
       break;
 

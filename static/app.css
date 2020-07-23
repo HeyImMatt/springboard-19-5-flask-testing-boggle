@@ -1,3 +1,8 @@
 .alert {
   height: 50px;
 }
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+}
